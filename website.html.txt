@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Standort ermitteln</h1>
+
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          document.getElementById("output").innerText = "Geolocation wird nicht unterstützt.";
+        }
+      }
+
+      function showPosition(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        document.getElementById("output").innerText = `Latitude: ${lat}, Longitude: ${lon}`;
+      }
+
+      function showError(error) {
+        document.getElementById("output").innerText = "Fehler: " + error.message;
+      }
+    </script>
+  </body>
+</html>
