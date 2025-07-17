@@ -30,4 +30,24 @@
   <h1>🎬 Video Upload & Player</h1>
   <p>Wähle eine Videodatei von deinem Gerät (MP4, WebM, etc.)</p>
 
-  <input type="file" id="videoInput" accept="vid
+  <input type="file" id="videoInput" accept="video/*">
+
+  <video id="videoPlayer" controls autoplay hidden></video>
+
+  <script>
+    const input = document.getElementById('videoInput');
+    const player = document.getElementById('videoPlayer');
+
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (!file) return;
+
+      const url = URL.createObjectURL(file);
+      player.src = url;
+      player.hidden = false;
+      player.load();
+      player.play();
+    });
+  </script>
+</body>
+</html>
