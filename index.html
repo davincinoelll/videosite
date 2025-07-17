@@ -2,10 +2,10 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Video Upload mit file.io</title>
+  <title>Temporäre Video Upload Seite</title>
   <style>
     body {
-      background-color: #1e1e1e;
+      background: #111;
       color: #fff;
       font-family: sans-serif;
       text-align: center;
@@ -14,24 +14,45 @@
     input, button {
       margin: 10px;
       padding: 10px;
-      font-size: 1rem;
+      font-size: 16px;
     }
     video {
       margin-top: 20px;
-      max-width: 90%;
+      width: 90%;
+      max-width: 720px;
+    }
+    .video-item {
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <h1>🎥 Video Upload (file.io)</h1>
+  <h1>🎥 Temporäre Video Uploads (file.io)</h1>
+  <p>Videos werden nach dem ersten Download oder nach 1 Tag gelöscht.</p>
   <input type="file" id="fileInput" accept="video/*">
   <br>
-  <button onclick="uploadFile()">Hochladen</button>
+  <button onclick="uploadVideo()">Video hochladen</button>
 
-  <div id="output"></div>
+  <h2>⬇️ Hochgeladene Videos</h2>
+  <div id="videoList"></div>
 
   <script>
-    async function uploadFile() {
+    const videoList = JSON.parse(localStorage.getItem('videos') || '[]');
+
+    function renderVideos() {
+      const container = document.getElementById('videoList');
+      container.innerHTML = '';
+      videoList.forEach(link => {
+        container.innerHTML += `
+          <div class="video-item">
+            <video controls src="${link}"></video>
+            <p><a href="${link}" target="_blank">${link}</a></p>
+          </div>
+        `;
+      });
+    }
+
+    async function uploadVideo() {
       const file = document.getElementById("fileInput").files[0];
       if (!file) {
         alert("Bitte wähle eine Videodatei aus.");
@@ -41,23 +62,23 @@
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("https://file.io", {
+      const response = await fetch("https://file.io/?expires=1d", {
         method: "POST",
         body: formData
       });
 
       const data = await response.json();
-
       if (data.success) {
-        document.getElementById("output").innerHTML = `
-          <p>✅ Hochgeladen! Hier ist dein Link:</p>
-          <a href="${data.link}" target="_blank">${data.link}</a>
-          <p><strong>Hinweis:</strong> Der Link funktioniert nur 1x!</p>
-        `;
+        alert("Video hochgeladen! Link sichtbar.");
+        videoList.push(data.link);
+        localStorage.setItem('videos', JSON.stringify(videoList));
+        renderVideos();
       } else {
-        document.getElementById("output").innerHTML = `<p style="color: red;">❌ Upload fehlgeschlagen: ${data.message}</p>`;
+        alert("Upload fehlgeschlagen: " + data.message);
       }
     }
+
+    renderVideos();
   </script>
 </body>
 </html>
