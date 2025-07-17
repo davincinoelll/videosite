@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Player</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    input {
+      width: 60%;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    video {
+      margin-top: 20px;
+      width: 90%;
+      max-width: 800px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Online Video Player</h1>
+  <p>Füge eine Video-URL ein (z. B. MP4-Datei von einer Website)</p>
+  <input id="videoUrl" placeholder="https://example.com/video.mp4">
+  <br>
+  <button onclick="loadVideo()">Video laden</button>
+
+  <div id="videoContainer"></div>
+
+  <script>
+    function loadVideo() {
+      const url = document.getElementById("videoUrl").value;
+      const container = document.getElementById("videoContainer");
+
+      container.innerHTML = `
+        <video controls autoplay>
+          <source src="${url}" type="video/mp4">
+          Dein Browser unterstützt das Videoformat nicht.
+        </video>
+      `;
+    }
+  </script>
+</body>
+</html>
